@@ -1,6 +1,6 @@
 import pygame
 import sys
-import time
+from random import randint
 
 pygame.init()
 
@@ -12,6 +12,7 @@ FPS = 60
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Invaders")
 clock = pygame.time.Clock()
+enemy_timer = 60
 
 # Player
 class Player(pygame.sprite.Sprite):
@@ -51,9 +52,28 @@ class PlayerProjectile(pygame.sprite.Sprite):
         if self.rect.y < -200:
             self.kill()
 
+# Enemy
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, option, x, y):
+        super().__init__()
+        if option == 1:
+            self.image = pygame.image.load("assets/pixel_ship_blue_small.png").convert_alpha()
+        elif option == 2:
+            self.image = pygame.image.load("assets/pixel_ship_green_small.png").convert_alpha()
+        elif option == 3:
+            self.image = pygame.image.load("assets/pixel_ship_red_small.png").convert_alpha()
+        self.rect = self.image.get_rect(center =(x, y))
+
+    def update(self):
+        self.rect.y += 2
+
+        if self.rect.y >= HEIGHT + 50:
+            self.kill()
+
 #Groups
 player = pygame.sprite.GroupSingle()
 player_projectile = pygame.sprite.Group()
+enemy = pygame.sprite.Group()
 
 ship = Player()
 player.add(ship)
@@ -72,14 +92,24 @@ while True:
         proj = PlayerProjectile(ship.rect.x, ship.rect.y)
         player_projectile.add(proj)
         ship.timer = 60
+
+    if enemy_timer <= 0:
+        enemy_ship = Enemy(randint(1, 3), randint(20, WIDTH-20), randint(-100, 0))
+        enemy.add(enemy_ship)
+        enemy_timer = 60
     
     # Drawing
     screen.fill((0,0,0))
     player.draw(screen)
     player_projectile.draw(screen)
+    enemy.draw(screen)
+  
     
     # Update
     player_projectile.update()
     player.update()
+    enemy.update()
     pygame.display.update()
+    
     clock.tick(FPS)
+    enemy_timer -= 1
