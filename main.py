@@ -11,6 +11,8 @@ FPS = 60
 # Setup
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Invaders")
+background = pygame.image.load("assets/background-black.png").convert_alpha()
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 # Player
@@ -47,8 +49,8 @@ class PlayerProjectile(pygame.sprite.Sprite):
         self.rect.y = y
     
     def update(self):
-        self.rect.y -= 3
-        if self.rect.y < -200:
+        self.rect.y -= 5
+        if self.rect.y < -50    :
             self.kill()
 
 #Groups
@@ -57,7 +59,6 @@ player_projectile = pygame.sprite.Group()
 
 ship = Player()
 player.add(ship)
-
 
 # Event Loop
 while True:
@@ -74,7 +75,7 @@ while True:
         ship.timer = 60
     
     # Drawing
-    screen.fill((0,0,0))
+    screen.blit(background, (0,0))
     player.draw(screen)
     player_projectile.draw(screen)
     
