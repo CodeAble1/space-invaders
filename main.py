@@ -192,7 +192,7 @@ while True:
     PlayerCollision(enemy_group, player_group)
 
     # Drawing
-    screen.fill((0,0,0))
+    screen.blit(background, (0,0))
     player_group.draw(screen)
     player_projectile.draw(screen)
     enemy_group.draw(screen)
