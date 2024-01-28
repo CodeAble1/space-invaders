@@ -1,4 +1,3 @@
-from ssl import enum_certificates
 import pygame
 import sys
 from random import randint
