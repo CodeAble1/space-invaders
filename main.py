@@ -1,3 +1,4 @@
+from email.base64mime import header_length
 import pygame
 import sys
 from random import randint
@@ -24,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("assets/pixel_ship_yellow.png").convert_alpha()
         self.rect = self.image.get_rect(center = (400, 400))
         self.mask = pygame.mask.from_surface(self.image)
+        self.health = 100
         self.timer = 60
         self.speed = 5
     
@@ -38,12 +40,17 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_DOWN] and self.rect.bottom <= HEIGHT:
             self.rect.y += self.speed
 
-    def health(self):
-        pass
+    def health_bar(self):
+        damage_bar = pygame.Rect(self.rect.bottomleft[0], self.rect.bottomleft[1] + 10, self.rect.width, 10)
+        health = pygame.Rect(self.rect.bottomleft[0], self.rect.bottomleft[1] + 10, self.health, 10)
+        pygame.draw.rect(screen, (255, 0, 0), damage_bar)
+        pygame.draw.rect(screen, (0, 255, 0), health)
 
+    def damage(self):
+        self.health -= 10
 
     def update(self):
-        self.health()
+        self.health_bar()
         self.player_input()
         self.timer -= 2
 
@@ -130,10 +137,8 @@ def PlayerCollision(enemy, player):
         for sprite2 in player:
             if pygame.sprite.collide_mask(sprite1, sprite2):
                 enemy.remove(sprite1)
+                player.sprite.damage()
                 
-
-
-
 #Groups
 player_group = pygame.sprite.GroupSingle()
 player_projectile = pygame.sprite.Group()
@@ -189,6 +194,7 @@ while True:
     ProjectileCollision(player_projectile, enemy_projectile)
     ProjectileCollision(enemy_group, player_projectile)
     PlayerCollision(enemy_group, player_group)
+    PlayerCollision(enemy_projectile, player_group)
 
     # Drawing
     screen.blit(background, (0,0))
