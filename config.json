@@ -1,0 +1,7 @@
+{
+    "WIDTH": 800,
+    "HEIGHT": 600, 
+    "FPS": 60,
+    "ENEMY_TIMER": 60,
+    "SHOOTING_TIMER": [80, 120, 160]
+}
